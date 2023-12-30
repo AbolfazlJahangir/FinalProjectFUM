@@ -53,17 +53,15 @@ def printBoard():
     print(f" {board[8][0]} | {board[8][1]} | {board[8][2]} | {board[8][3]} | {board[8][4]} | {board[8][5]} | {board[8][6]} | {board[8][7]} | {board[8][8]} ")
 
 
-# حرکت بازیکن ها روی مکان های مجاز
-def emptySpacesMove(x, y):
+def letMove(len, x, y):
+    if len == row_move: # یعنی با خانه های اصلی بردگیم کار داریم
+        if 0 <= x < row_move and 0 <= y < column_move and board[x][y] == " " and board_wall[x][y] == "-":
+            return True
+    else: # اینجا بادیوارهای بردگیم کار داریم
+        if 0 <= x < row_move - 1 and 0 <= y < column_move - 1 and board_wall[x][y] == "-":
+            return True
 
-    if x != x1 and x != x2 and y != y1 and y != y2:
-        return True
-    else:
-        return False
-
-
-def emptySpacesWall(x, y):
-    pass
+    return False
 
 
 def checkWinner():
@@ -84,46 +82,72 @@ def play():
 
     while checkWinner() is False:
         if turn1 is True:
-            move1 = int(input("Player1 turn --> up(1) down(2) right(3) left(4): "))
-            if move1 == 1:
-                board[x1][y1] = " "
-                board[x1 - 1][y1] = player1
-                x1 -= 1
-            elif move1 == 2:
-                board[x1][y1] = " "
-                board[x1 + 1][y1] = player1
-                x1 += 1
-            elif move1 == 3:
-                board[x1][y1] = " "
-                board[x1][y1 + 1] = player1
-                y1 += 1
-            elif move1 == 4:
-                board[x1][y1] = " "
-                board[x1][y1 - 1] = player1
-                y1 -= 1
+            wall_move = int(input("Player1 turn --> MOVE(1) or WALL(2): "))
+            if wall_move == 1:
+                move1 = int(input("Player1 turn --> up(1) down(2) right(3) left(4): "))
+                if move1 == 1:
+                    board[x1][y1] = " "
+                    board[x1 - 1][y1] = player1
+                    x1 -= 1
+                elif move1 == 2:
+                    board[x1][y1] = " "
+                    board[x1 + 1][y1] = player1
+                    x1 += 1
+                elif move1 == 3:
+                    board[x1][y1] = " "
+                    board[x1][y1 + 1] = player1
+                    y1 += 1
+                elif move1 == 4:
+                    board[x1][y1] = " "
+                    board[x1][y1 - 1] = player1
+                    y1 -= 1
+                else:
+                    continue
+            elif wall_move == 2:
+                print("Enter the coordinate of wall: ", end="")
+                xwall1, ywall1 = tuple([int(i) for i in input().split()])
+                xwall1 -= 1
+                ywall1 -= 1
+                if letMove(len(board_wall), xwall1, ywall1) is True:
+                    board_wall[xwall1][ywall1] = "="
+                else:
+                    continue
             else:
                 continue
             turn1 = False
             turn2 = True
             printBoard()
         else:
-            move2 = int(input("Player2 turn --> up(1) down(2) right(3) left(4): "))
-            if move2 == 1:
-                board[x2][y2] = " "
-                board[x2 - 1][y2] = player2
-                x2 -= 1
-            elif move2 == 2:
-                board[x2][y2] = " "
-                board[x2 + 1][y2] = player2
-                x2 += 1
-            elif move2 == 3:
-                board[x2][y2] = " "
-                board[x2][y2 + 1] = player2
-                y2 += 1
-            elif move2 == 4:
-                board[x2][y2] = " "
-                board[x2][y2 - 1] = player2
-                y2 -= 1
+            wall_move = int(input("Player2 turn --> MOVE(1) or WALL(2): "))
+            if wall_move == 1:
+                move2 = int(input("Player2 turn --> up(1) down(2) right(3) left(4): "))
+                if move2 == 1:
+                    board[x2][y2] = " "
+                    board[x2 - 1][y2] = player2
+                    x2 -= 1
+                elif move2 == 2:
+                    board[x2][y2] = " "
+                    board[x2 + 1][y2] = player2
+                    x2 += 1
+                elif move2 == 3:
+                    board[x2][y2] = " "
+                    board[x2][y2 + 1] = player2
+                    y2 += 1
+                elif move2 == 4:
+                    board[x2][y2] = " "
+                    board[x2][y2 - 1] = player2
+                    y2 -= 1
+                else:
+                    continue
+            elif wall_move == 2:
+                print("Enter the coordinate of wall: ", end="")
+                xwall2, ywall2 = tuple([int(i) for i in input().split()])
+                xwall2 -= 1
+                ywall2 -= 1
+                if letMove(len(board_wall), xwall2, ywall2) is True:
+                    board_wall[xwall2][ywall2] = "="
+                else:
+                    continue
             else:
                 continue
             turn2 = False
